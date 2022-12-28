@@ -1,7 +1,7 @@
 package main
 
 import (
-	"errors"
+	"booking-app/helper"
 	"fmt"
 	"strings"
 )
@@ -23,22 +23,6 @@ func printFirstNames(bookings []string) []string {
 		firstNames = append(firstNames, names[0])
 	}
 	return firstNames
-}
-
-func validateUserInput(userFirstName string, userLastName string, userEmail string, userTickets uint) error {
-	isInvalidName := len(userFirstName) < 2 || len(userLastName) < 2
-	if isInvalidName {
-		return errors.New("you have entered invalid name")
-	}
-	isValidEmail := strings.Contains(userEmail, "@")
-	if !isValidEmail {
-		return errors.New("you have entered invalid email")
-	}
-	isValidTicketNo := userTickets <= remainingTickets && userTickets > 0
-	if !isValidTicketNo {
-		return errors.New("you have entered invalid number of tickets")
-	}
-	return nil
 }
 
 func getUserInput() (string, string, string, uint) {
@@ -66,7 +50,7 @@ func main() {
 		fmt.Printf("\nTickets available now:%v\n", remainingTickets)
 		userFirstName, userLastName, userEmail, userTickets := getUserInput()
 
-		if err := validateUserInput(userFirstName, userLastName, userEmail, userTickets); err != nil {
+		if err := helper.ValidateUserInput(userFirstName, userLastName, userEmail, userTickets, remainingTickets); err != nil {
 			fmt.Println(err)
 		} else {
 			remainingTickets = remainingTickets - userTickets
