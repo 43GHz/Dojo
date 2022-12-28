@@ -17,7 +17,7 @@ func main() {
 
 	fmt.Printf("Welcome to %v 2022 booking application", conferenceName)
 	for remainingTickets > 0 {
-		fmt.Println("Total tickets:", totalTickets, "\nTickets available now:", remainingTickets)
+		fmt.Println("\nTotal tickets:", totalTickets, "\nTickets available now:", remainingTickets)
 		fmt.Println("Enter first name: ")
 		fmt.Scan(&userFirstName)
 		fmt.Println("Enter last name: ")
@@ -27,7 +27,18 @@ func main() {
 		fmt.Println("Enter no. of tickets: ")
 		fmt.Scan(&userTickets)
 
-		if userTickets <= remainingTickets {
+		isInvalidName := len(userFirstName) < 2 && len(userLastName) < 2
+		if isInvalidName {
+			fmt.Printf("\nYou have entered invalid name")
+			continue
+		}
+		isValidEmail := strings.Contains(userEmail, "@")
+		if !isValidEmail {
+			fmt.Printf("\nYou have entered invalid email")
+			continue
+		}
+		isValidTicketNo := userTickets <= remainingTickets && userTickets > 0
+		if isValidTicketNo {
 			remainingTickets = remainingTickets - userTickets
 			fmt.Printf("\nThank you %v %v for booking %v tickets! You will receive a confirmation email at %v\n", userFirstName, userLastName, userTickets, userEmail)
 
@@ -39,10 +50,10 @@ func main() {
 				firstNames = append(firstNames, names[0])
 			}
 			fmt.Printf("\nAll bookings first names: %v\n", firstNames)
-		}else {
+		} else {
 			fmt.Printf("\nSorry we have only %v tickets available\n", remainingTickets)
 		}
-		
+
 		if remainingTickets == 0 {
 			//end prgm
 			fmt.Printf("\nConference tickets sold out!")
