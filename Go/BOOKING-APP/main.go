@@ -3,10 +3,13 @@ package main
 import (
 	"booking-app/helper"
 	"fmt"
+	"sync"
+	"time"
 	//"strings"
 	//"strconv"
 )
 
+var wg = sync.WaitGroup{}
 var conferenceName = "GoGo Conference"
 
 const totalTickets = 200
@@ -33,12 +36,15 @@ func main() {
 			fmt.Println(err)
 		} else {
 			remainingTickets = bookTicket(userTickets, remainingTickets, userFirstName, userLastName, userEmail)
+			wg.Add(1)
+			go sendTicket(userTickets, userFirstName, userLastName, userEmail)
 		}
 		if remainingTickets == 0 {
 			//end prgm
 			fmt.Printf("\nConference tickets sold out!")
 			break
 		}
+		wg.Wait()
 	}
 	fmt.Printf("\nAll bookings first names: %v\n", printFirstNames())
 }
@@ -86,4 +92,13 @@ func bookTicket(userTickets uint, remainingTickets uint, userFirstName string, u
 	fmt.Printf("\nRemaining tickets: %v", remainingTickets)
 	fmt.Printf("\nList of bookings: %v\n", bookings)
 	return remainingTickets
+}
+
+func sendTicket(userTickets uint, userFirstName string, userLastName string, userEmail string) {
+	time.Sleep(5 * time.Second)
+	var ticket = fmt.Sprintf("%v tickets for %v %v", userTickets, userFirstName, userLastName)
+	fmt.Printf("\n*************")
+	fmt.Printf("\nsending ticket:\n%v to %v", ticket, userEmail)
+	fmt.Printf("\n*************")
+	wg.Done()
 }
